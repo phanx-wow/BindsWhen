@@ -1,4 +1,5 @@
 ## Interface: 60000
+## Version: @project-version@
 
 ## Title: Binds When?
 ## Notes: Shows BoA/BoE text on bag items.
