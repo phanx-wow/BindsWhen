@@ -46,18 +46,41 @@ end
 ------------------------------------------------------------------------
 -- Keep a cache of which items are BoA or BoE
 
-local textForItem = setmetatable({}, { __index = function(t, id)
-	scanTip:SetInventoryItemByID(id)
+local textForItem = {}
+local function GetBindText(arg1, arg2)
+	local link
+	if arg1 == "player" then
+		link = GetInventoryItemLink(arg1, arg2)
+	else
+		link = GetContainerItemLink(arg1, arg2)
+	end
+	if not link then
+		return
+	end
+
+	local text = textForItem[link]
+	if text then
+		return text
+	end
+
+	if arg1 == "player" then
+		scanTip:SetInventoryItem(arg1, arg2)
+	else
+		scanTip:SetBagItem(arg1, arg2)
+	end
 	for i = 1, 5 do
 		local bind = scanTip[i]:GetText()
+		if bind and strmatch(bind, USE_COLON) then -- ignore recipes
+			break
+		end
 		local text = bind and textForBind[bind]
 		if text then
-			t[id] = text
+			textForItem[link] = text
 			return text
 		end
 	end
-	t[id] = false
-end })
+	textForItem[link] = false
+end
 
 ------------------------------------------------------------------------
 -- Clear cached BoE items when confirming to bind something
@@ -100,17 +123,15 @@ hooksecurefunc("ContainerFrame_Update", function(frame)
 	for i = 1, frame.size do
 		local button = _G[name.."Item"..i]
 		local slot = button:GetID()
-		local id = GetContainerItemID(bag, slot)
-		local text = id and not button.Count:IsShown() and textForItem[id]
+		local text = not button.Count:IsShown() and GetBindText(bag, slot)
 		SetItemButtonBindType(button, text)
 	end
 end)
 
 hooksecurefunc("BankFrameItemButton_Update", function(button)
-	local bag = button:GetParent():GetID()
+	local bag = button.isBag and -4 or button:GetParent():GetID()
 	local slot = button:GetID()
-	local id = GetContainerItemID(bag, slot)
-	local text = id and not button.Count:IsShown() and textForItem[id]
+	local text = not button.Count:IsShown() and GetBindText("player", button:GetInventorySlot())
 	SetItemButtonBindType(button, text)
 end)
 
