@@ -8,7 +8,7 @@
 
 local BoA = "|cffe6cc80BoA|r" -- heirloom item color
 local BoE = "|cff1eff00BoE|r" -- uncommon item color
-local BoP = false -- "BoP" -- not displayed
+local BoP = false -- not displayed
 
 ------------------------------------------------------------------------
 -- Map tooltip text to display text
@@ -46,26 +46,26 @@ end
 ------------------------------------------------------------------------
 -- Keep a cache of which items are BoA or BoE
 
-local textForItem = setmetatable({}, { __index = function(t, link)
-	scanTip:SetHyperlink(link)
+local textForItem = setmetatable({}, { __index = function(t, id)
+	scanTip:SetInventoryItemByID(id)
 	for i = 1, 5 do
 		local bind = scanTip[i]:GetText()
 		local text = bind and textForBind[bind]
 		if text then
-			t[link] = text
+			t[id] = text
 			return text
 		end
 	end
-	t[link] = false
+	t[id] = false
 end })
 
 ------------------------------------------------------------------------
 -- Clear cached BoE items when confirming to bind something
 
 local function ClearTempCache()
-	for link, text in pairs(textForItem) do
+	for id, text in pairs(textForItem) do
 		if temporary[text] then
-			textForItem[link] = nil
+			textForItem[id] = nil
 		end
 	end
 end
@@ -100,8 +100,8 @@ hooksecurefunc("ContainerFrame_Update", function(frame)
 	for i = 1, frame.size do
 		local button = _G[name.."Item"..i]
 		local slot = button:GetID()
-		local link = GetContainerItemLink(bag, slot)
-		local text = link and not button.Count:IsShown() and textForItem[link]
+		local id = GetContainerItemID(bag, slot)
+		local text = id and not button.Count:IsShown() and textForItem[id]
 		SetItemButtonBindType(button, text)
 	end
 end)
@@ -109,18 +109,25 @@ end)
 hooksecurefunc("BankFrameItemButton_Update", function(button)
 	local bag = button:GetParent():GetID()
 	local slot = button:GetID()
-	local link = GetContainerItemLink(bag, slot)
-	local text = link and not button.Count:IsShown() and textForItem[link]
+	local id = GetContainerItemID(bag, slot)
+	local text = id and not button.Count:IsShown() and textForItem[id]
 	SetItemButtonBindType(button, text)
 end)
 
 ------------------------------------------------------------------------
 -- Bagnon support
 
+local idFromLink = setmetatable({}, { __index = function(t, link)
+	local id = link and strmatch(link, "item:(%d+)")
+	t[link] = id or false
+	return id
+end })
+
 if Bagnon then
 	local function UpdateItemSlot(button)
 		local _, _, _, _, _, _, link = button:GetInfo()
-		local text = link and not button.Count:IsShown() and textForItem[link]
+		local id = link and idFromLink[link]
+		local text = id and not button.Count:IsShown() and textForItem[id]
 		SetItemButtonBindType(button, text)
 	end
 
