@@ -47,6 +47,7 @@ end
 -- Keep a cache of which items are BoA or BoE
 
 local textForItem = {}
+
 local function GetBindText(arg1, arg2)
 	local link
 	if arg1 == "player" then
@@ -145,11 +146,17 @@ local idFromLink = setmetatable({}, { __index = function(t, link)
 end })
 
 if Bagnon then
-	local function UpdateItemSlot(button)
-		local _, _, _, _, _, _, link = button:GetInfo()
-		local id = link and idFromLink[link]
-		local text = id and not button.Count:IsShown() and textForItem[id]
-		SetItemButtonBindType(button, text)
+	local function UpdateItemSlot(self)
+		local bag = self:GetBag()
+		local slot = self:GetID()
+		local text
+		local getSlot = Bagnon:IsBank(bag) and BankButtonIDToInvSlotID or Bagnon:IsReagents(bag) and ReagentBankButtonIDToInvSlotID
+		if getSlot then
+			text = not self.Count:IsShown() and GetBindText("player", getSlot(slot))
+		else
+			text = not self.Count:IsShown() and GetBindText(bag, slot)
+		end
+		SetItemButtonBindType(self, text)
 	end
 
 	local CreateItemSlot = Bagnon.ItemSlot.Create
