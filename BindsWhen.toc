@@ -8,6 +8,4 @@
 ## X-Copyright: Copyright (c) 2015 Phanx. All rights reserved.
 ## X-Website: https://github.com/Phanx/BindsWhen
 
-## OptionalDependencies: Bagnon
-
 BindsWhen.lua

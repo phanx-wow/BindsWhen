@@ -137,15 +137,13 @@ hooksecurefunc("BankFrameItemButton_Update", function(button)
 end)
 
 ------------------------------------------------------------------------
--- Bagnon support
+-- Addon support
 
-local idFromLink = setmetatable({}, { __index = function(t, link)
-	local id = link and strmatch(link, "item:(%d+)")
-	t[link] = id or false
-	return id
-end })
+local addons = {}
 
-if Bagnon then
+tinsert(addons, function()
+	if not Bagnon then return true end
+
 	local function UpdateItemSlot(self)
 		local bag = self:GetBag()
 		local slot = self:GetID()
@@ -165,4 +163,31 @@ if Bagnon then
 		hooksecurefunc(button, "Update", UpdateItemSlot)
 		return button
 	end
-end
+end)
+
+tinsert(addons, function()
+	if not cargBags then return true end
+
+	local BagButton = cargBags.classes.BagButton
+	hooksecurefunc(BagButton, "Update", function(self)
+		local text = GetBindText("player", (self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
+		SetItemButtonBindType(self, text)
+	end)
+end)
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
+f:SetScript("OnEvent", function(f)
+	for i = #addons, 1, -1 do
+		if not addons[i]() then
+			tremove(addons, i)
+		end
+	end
+	if #addons == 0 then
+		f:UnregisterAllEvents()
+		f:SetScript("OnEvent", nil)
+		f, addons = nil, nil
+	else
+		f:RegisterEvent("ADDON_LOADED")
+	end
+end)
