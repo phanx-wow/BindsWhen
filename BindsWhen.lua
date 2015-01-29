@@ -168,10 +168,30 @@ end)
 tinsert(addons, function()
 	if not cargBags then return true end
 
-	local BagButton = cargBags.classes.BagButton
-	hooksecurefunc(BagButton, "Update", function(self)
-		local text = GetBindText("player", (self.GetInventorySlot and self:GetInventorySlot()) or self.invID)
+	local function UpdateItemButton(self, item)
+		if not self.bindsOnText then
+			bindsOnText = self:CreateFontString(nil, "ARTWORK")
+			bindsOnText:SetPoint("BOTTOMRIGHT", self.BottomString)
+			bindsOnText:SetFont(self.BottomString:GetFont())
+			self.bindsOnText = bindsOnText
+		end
+		local text = item and not self.Count:IsShown() and GetBindText(item.bagID, item.slotID)
+		if text and self.BottomString:IsShown() then
+			self.BottomString:SetText("")
+		end
 		SetItemButtonBindType(self, text)
+	end
+	
+	local hooked = {}
+
+	local Implementation = cargBags.classes.Implementation
+	hooksecurefunc(Implementation, "UpdateSlot", function(self, bagID, slotID)
+		local button = self:GetButton(bagID, slotID)
+		if button and button.Update and not hooked[button] then
+			hooksecurefunc(button, "Update", UpdateItemButton)
+			hooked[button] = true
+			button:Update(button:GetItemInfo())
+		end
 	end)
 end)
 
