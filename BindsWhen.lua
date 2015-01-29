@@ -165,7 +165,17 @@ tinsert(addons, function()
 	end
 end)
 
-tinsert(addons, function()
+tinsert(addons, function(name)
+	local cargBags = _G[name and GetAddOnMetadata(name, "X-cargBags") or "cargBags"]
+	if not cargBags and not name then
+		for i = 1, GetNumAddOns() do
+			local global = GetAddOnMetadata(i, "X-cargBags")
+			if global then
+				cargBags = _G[global]
+				break
+			end
+		end
+	end
 	if not cargBags then return true end
 
 	local function UpdateItemButton(self, item)
@@ -197,9 +207,9 @@ end)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
-f:SetScript("OnEvent", function(f)
+f:SetScript("OnEvent", function(f, e, name)
 	for i = #addons, 1, -1 do
-		if not addons[i]() then
+		if not addons[i](name) then
 			tremove(addons, i)
 		end
 	end
