@@ -35,11 +35,9 @@ local temporary = {
 -- Tooltip for scanning for Binds on X text
 
 local scanTip = CreateFrame("GameTooltip", "BindsWhenScanTooltip")
-scanTip:SetOwner(WorldFrame, "ANCHOR_NONE")
 for i = 1, 5 do
 	local L = scanTip:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	local R = scanTip:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	scanTip:AddFontStrings(L, R)
+	scanTip:AddFontStrings(L, scanTip:CreateFontString(nil, "OVERLAY", "GameFontNormal"))
 	scanTip[i] = L
 end
 
@@ -49,26 +47,30 @@ end
 local textForItem = {}
 
 local function GetBindText(arg1, arg2)
-	local link
+	local link, setTooltip, onlyBoA
 	if arg1 == "player" then
 		link = GetInventoryItemLink(arg1, arg2)
-	else
+		setTooltip = scanTip.SetInventoryItem
+	elseif arg2 then
 		link = GetContainerItemLink(arg1, arg2)
+		setTooltip = scanTip.SetBagItem
+	else
+		link = arg1
+		setTooltip = scanTip.SetHyperlink
+		onlyBoA = true
 	end
 	if not link then
 		return
 	end
+	link = arg1 .. (arg2 or "") .. link
 
 	local text = textForItem[link]
 	if text then
 		return text
 	end
 
-	if arg1 == "player" then
-		scanTip:SetInventoryItem(arg1, arg2)
-	else
-		scanTip:SetBagItem(arg1, arg2)
-	end
+	scanTip:SetOwner(WorldFrame, "ANCHOR_NONE")
+	setTooltip(scanTip, arg1, arg2)
 	for i = 1, 5 do
 		local bind = scanTip[i]:GetText()
 		if bind and strmatch(bind, USE_COLON) then -- ignore recipes
@@ -76,6 +78,9 @@ local function GetBindText(arg1, arg2)
 		end
 		local text = bind and textForBind[bind]
 		if text then
+			if onlyBoA and text ~= BoA then -- don't save BoE text for non-recipe hyperlinks, eg. Bagnon cached items
+				return
+			end
 			textForItem[link] = text
 			return text
 		end
@@ -145,14 +150,23 @@ tinsert(addons, function()
 	if not Bagnon then return true end
 
 	local function UpdateItemSlot(self)
-		local bag = self:GetBag()
-		local slot = self:GetID()
 		local text
-		local getSlot = Bagnon:IsBank(bag) and BankButtonIDToInvSlotID or Bagnon:IsReagents(bag) and ReagentBankButtonIDToInvSlotID
-		if getSlot then
-			text = not self.Count:IsShown() and GetBindText("player", getSlot(slot))
+		if self:IsCached() then
+			local link = self:GetItem()
+			--print("UpdateItemSlot", link)
+			if link and not strmatch(link, "battlepet:") then
+				text = not self.Count:IsShown() and GetBindText(link)
+			end
 		else
-			text = not self.Count:IsShown() and GetBindText(bag, slot)
+			local bag = self:GetBag()
+			local slot = self:GetID()
+			--print("UpdateItemSlot", bag, slot)
+			local getSlot = Bagnon:IsBank(bag) and BankButtonIDToInvSlotID or Bagnon:IsReagents(bag) and ReagentBankButtonIDToInvSlotID
+			if getSlot then
+				text = not self.Count:IsShown() and GetBindText("player", getSlot(slot))
+			else
+				text = not self.Count:IsShown() and GetBindText(bag, slot)
+			end
 		end
 		SetItemButtonBindType(self, text)
 	end
@@ -191,7 +205,7 @@ tinsert(addons, function(name)
 		end
 		SetItemButtonBindType(self, text)
 	end
-	
+
 	local hooked = {}
 
 	local Implementation = cargBags.classes.Implementation
