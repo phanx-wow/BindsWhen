@@ -146,6 +146,21 @@ end)
 
 local addons = {}
 
+tinsert(addons, function(name)
+	if not AdiBags then return true end
+
+	local ItemButton = AdiBags:GetClass("ItemButton")
+	hooksecurefunc(ItemButton, "Update", function(self)
+		local text
+		if self.inventorySlot then
+			text = not self.Count:IsShown() and GetBindText("player", self.inventorySlot)
+		else
+			text = not self.Count:IsShown() and GetBindText(self.bag, self.slot)
+		end
+		SetItemButtonBindType(self, text)
+	end)
+end)
+
 tinsert(addons, function()
 	if not Bagnon then return true end
 
