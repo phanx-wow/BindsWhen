@@ -194,7 +194,7 @@ tinsert(addons, function(name)
 
 	local function UpdateItemButton(self, item)
 		if not self.bindsOnText then
-			bindsOnText = self:CreateFontString(nil, "ARTWORK")
+			local bindsOnText = self:CreateFontString(nil, "ARTWORK")
 			bindsOnText:SetPoint("BOTTOMRIGHT", self.BottomString)
 			bindsOnText:SetFont(self.BottomString:GetFont())
 			self.bindsOnText = bindsOnText
@@ -216,6 +216,25 @@ tinsert(addons, function(name)
 			hooked[button] = true
 			button:Update(button:GetItemInfo())
 		end
+	end)
+end)
+
+tinsert(addons, function(name)
+	if not Stuffing then return true end
+
+	hooksecurefunc(Stuffing, "SlotUpdate", function(self, b)
+		local button = b.frame
+		if not button.bindsOnText then
+			local bindsOnText = button:CreateFontString(nil, "ARTWORK")
+			bindsOnText:SetPoint("TOPRIGHT", button.Count)
+			bindsOnText:SetFont(button.Count:GetFont())
+			button.bindsOnText = bindsOnText
+		end
+		local bag = b.bag
+		local slot = b.slot
+		--print("SlotUpdate", bag, slot)
+		local text = not button.Count:IsShown() and GetBindText(bag, slot)
+		SetItemButtonBindType(button, text)
 	end)
 end)
 
