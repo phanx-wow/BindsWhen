@@ -166,21 +166,26 @@ tinsert(addons, function()
 
 	local function UpdateItemSlot(self)
 		local text
-		if self:IsCached() then
-			local link = self:GetItem()
-			--print("UpdateItemSlot", link)
-			if link and not strmatch(link, "battlepet:") then
-				text = not self.Count:IsShown() and GetBindText(link)
-			end
-		else
-			local bag = self:GetBag()
-			local slot = self:GetID()
-			--print("UpdateItemSlot", bag, slot)
-			local getSlot = Bagnon:IsBank(bag) and BankButtonIDToInvSlotID or Bagnon:IsReagents(bag) and ReagentBankButtonIDToInvSlotID
-			if getSlot then
-				text = not self.Count:IsShown() and GetBindText("player", getSlot(slot))
+		if not self.Count:IsShown() then
+			if self:IsCached() then
+				local link = self:GetItem()
+				if link then
+					if not strmatch(link, "battlepet:") then
+						-- Caged battle pets don't bind and don't stack
+						text = BoE
+					else
+						text = GetBindText(link)
+					end
+				end
 			else
-				text = not self.Count:IsShown() and GetBindText(bag, slot)
+				local bag = self.bag
+				local slot = self:GetID()
+				local getInvSlot = bag == BANK_CONTAINER and BankButtonIDToInvSlotID or bag == REAGENTBANK_CONTAINER and ReagentBankButtonIDToInvSlotID
+				if getInvSlot then
+					text = GetBindText("player", getInvSlot(slot))
+				else
+					text = GetBindText(bag, slot)
+				end
 			end
 		end
 		SetItemButtonBindType(self, text)
@@ -208,15 +213,18 @@ tinsert(addons, function(name)
 	if not cargBags then return true end
 
 	local function UpdateItemButton(self, item)
-		if not self.bindsOnText then
-			local bindsOnText = self:CreateFontString(nil, "ARTWORK")
-			bindsOnText:SetPoint("BOTTOMRIGHT", self.BottomString)
-			bindsOnText:SetFont(self.BottomString:GetFont())
-			self.bindsOnText = bindsOnText
-		end
-		local text = item and not self.Count:IsShown() and GetBindText(item.bagID, item.slotID)
-		if text and self.BottomString:IsShown() then
-			self.BottomString:SetText("")
+		local text
+		if item and not self.Count:IsShown() then
+			if not self.bindsOnText then
+				local bindsOnText = self:CreateFontString(nil, "ARTWORK")
+				bindsOnText:SetPoint("BOTTOMRIGHT", self.BottomString)
+				bindsOnText:SetFont(self.BottomString:GetFont())
+				self.bindsOnText = bindsOnText
+			end
+			text = GetBindText(item.bagID, item.slotID)
+			if text and self.BottomString:IsShown() then
+				self.BottomString:SetText("")
+			end
 		end
 		SetItemButtonBindType(self, text)
 	end
