@@ -261,6 +261,18 @@ tinsert(addons, function(name)
 	end)
 end)
 
+tinsert(addons, function(name)
+    if not LiteBagItemButton_Update then return true end
+
+    hooksecurefunc("LiteBagItemButton_Update", function(button)
+        local slot = button:GetID()
+        local bag =  button:GetParent():GetID()
+        local text = not button.Count:IsShown() and GetBindText(bag, slot)
+        SetItemButtonBindType(button, text)
+    end)
+end)
+
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(f, e, name)
