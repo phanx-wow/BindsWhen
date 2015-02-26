@@ -1,6 +1,5 @@
 ## Interface: 60000
 ## Version: @project-version@
-## OptionalDeps: LiteBag
 
 ## Title: Binds When?
 ## Notes: Shows BoA/BoE text on bag items.
