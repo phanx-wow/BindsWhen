@@ -146,6 +146,27 @@ end)
 
 local addons = {}
 
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
+f:SetScript("OnEvent", function(f, e, name)
+	for i = #addons, 1, -1 do
+		if not addons[i](name) then
+			tremove(addons, i)
+		end
+	end
+	if #addons == 0 then
+		f:UnregisterAllEvents()
+		f:SetScript("OnEvent", nil)
+		f, addons = nil, nil
+	else
+		f:RegisterEvent("ADDON_LOADED")
+	end
+end)
+
+------------------------------------------------------------------------
+-- AdiBags
+-- http://www.wowace.com/addons/adibags/
+
 tinsert(addons, function(name)
 	if not AdiBags then return true end
 
@@ -160,6 +181,10 @@ tinsert(addons, function(name)
 		SetItemButtonBindType(self, text)
 	end)
 end)
+
+------------------------------------------------------------------------
+-- Bagnon
+-- http://wow.curseforge.com/addons/bagnon/
 
 tinsert(addons, function()
 	if not Bagnon then return true end
@@ -198,6 +223,10 @@ tinsert(addons, function()
 		return button
 	end
 end)
+
+------------------------------------------------------------------------
+-- cargBags
+-- http://www.wowinterface.com/downloads/info22329-cargBagsNivayaRealUIstandalone.html
 
 tinsert(addons, function(name)
 	local cargBags = _G[name and GetAddOnMetadata(name, "X-cargBags") or "cargBags"]
@@ -242,6 +271,10 @@ tinsert(addons, function(name)
 	end)
 end)
 
+------------------------------------------------------------------------
+-- DerpyStuffing
+-- http://www.wowinterface.com/downloads/info22500-DerpyStuffingAuroraOneBags.html
+
 tinsert(addons, function(name)
 	if not Stuffing then return true end
 
@@ -261,6 +294,10 @@ tinsert(addons, function(name)
 	end)
 end)
 
+------------------------------------------------------------------------
+-- LiteBag
+-- http://wow.curseforge.com/addons/litebag/
+
 tinsert(addons, function(name)
     if not LiteBagItemButton_Update then return true end
 
@@ -270,22 +307,4 @@ tinsert(addons, function(name)
         local text = not button.Count:IsShown() and GetBindText(bag, slot)
         SetItemButtonBindType(button, text)
     end)
-end)
-
-
-local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_LOGIN")
-f:SetScript("OnEvent", function(f, e, name)
-	for i = #addons, 1, -1 do
-		if not addons[i](name) then
-			tremove(addons, i)
-		end
-	end
-	if #addons == 0 then
-		f:UnregisterAllEvents()
-		f:SetScript("OnEvent", nil)
-		f, addons = nil, nil
-	else
-		f:RegisterEvent("ADDON_LOADED")
-	end
 end)
