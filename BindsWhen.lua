@@ -62,9 +62,9 @@ local function GetBindText(arg1, arg2)
 	if not link then
 		return
 	end
-	link = arg1 .. (arg2 or "") .. link
 
-	local text = textForItem[link]
+	local item = onlyBoA and link or (arg1 .. arg2 .. link)
+	local text = textForItem[item]
 	if text then
 		return text
 	end
@@ -81,11 +81,11 @@ local function GetBindText(arg1, arg2)
 			if onlyBoA and text ~= BoA then -- don't save BoE text for non-recipe hyperlinks, eg. Bagnon cached items
 				return
 			end
-			textForItem[link] = text
+			textForItem[item] = text
 			return text
 		end
 	end
-	textForItem[link] = false
+	textForItem[item] = false
 end
 
 ------------------------------------------------------------------------
@@ -191,11 +191,11 @@ tinsert(addons, function()
 
 	local function UpdateItemSlot(self)
 		local text
-		if not self.Count:IsShown() then
+		if not self.Count:IsShown() and self.bag ~= "vault" then
 			if self:IsCached() then
-				local link = self:GetItem()
+				local link = self.hasItem
 				if link then
-					if not strmatch(link, "battlepet:") then
+					if strmatch(link, "battlepet:") then
 						-- Caged battle pets don't bind and don't stack
 						text = BoE
 					else
