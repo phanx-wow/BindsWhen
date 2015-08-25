@@ -185,41 +185,53 @@ end)
 ------------------------------------------------------------------------
 -- Bagnon
 -- http://wow.curseforge.com/addons/bagnon/
+-- http://wow.curseforge.com/addons/combuctor/
+
+local function UpdateBagnonItemSlot(self)
+	local text
+	if not self.Count:IsShown() and self.bag ~= "vault" then
+		if self:IsCached() then
+			local link = self.hasItem
+			if link then
+				if strmatch(link, "battlepet:") then
+					-- Caged battle pets don't bind and don't stack
+					text = BoE
+				else
+					text = GetBindText(link)
+				end
+			end
+		else
+			local bag = self.bag
+			local slot = self:GetID()
+			local getInvSlot = bag == BANK_CONTAINER and BankButtonIDToInvSlotID or bag == REAGENTBANK_CONTAINER and ReagentBankButtonIDToInvSlotID
+			if getInvSlot then
+				text = GetBindText("player", getInvSlot(slot))
+			else
+				text = GetBindText(bag, slot)
+			end
+		end
+	end
+	SetItemButtonBindType(self, text)
+end
 
 tinsert(addons, function()
 	if not Bagnon then return true end
 
-	local function UpdateItemSlot(self)
-		local text
-		if not self.Count:IsShown() and self.bag ~= "vault" then
-			if self:IsCached() then
-				local link = self.hasItem
-				if link then
-					if strmatch(link, "battlepet:") then
-						-- Caged battle pets don't bind and don't stack
-						text = BoE
-					else
-						text = GetBindText(link)
-					end
-				end
-			else
-				local bag = self.bag
-				local slot = self:GetID()
-				local getInvSlot = bag == BANK_CONTAINER and BankButtonIDToInvSlotID or bag == REAGENTBANK_CONTAINER and ReagentBankButtonIDToInvSlotID
-				if getInvSlot then
-					text = GetBindText("player", getInvSlot(slot))
-				else
-					text = GetBindText(bag, slot)
-				end
-			end
-		end
-		SetItemButtonBindType(self, text)
-	end
-
 	local CreateItemSlot = Bagnon.ItemSlot.Create
 	function Bagnon.ItemSlot:Create()
 		local button = CreateItemSlot(self)
-		hooksecurefunc(button, "Update", UpdateItemSlot)
+		hooksecurefunc(button, "Update", UpdateBagnonItemSlot)
+		return button
+	end
+end)
+
+tinsert(addons, function()
+	if not Combuctor then return true end
+
+	local CreateItemSlot = Combuctor.ItemSlot.Create
+	function Combuctor.ItemSlot:Create()
+		local button = CreateItemSlot(self)
+		hooksecurefunc(button, "Update", UpdateBagnonItemSlot)
 		return button
 	end
 end)
