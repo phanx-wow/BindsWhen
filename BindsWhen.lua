@@ -215,21 +215,11 @@ local function UpdateBagnonItemSlot(self)
 end
 
 tinsert(addons, function()
-	if not Bagnon then return true end
+	local addon = Bagnon or Combuctor
+	if not addon then return true end
 
-	local CreateItemSlot = Bagnon.ItemSlot.Create
-	function Bagnon.ItemSlot:Create()
-		local button = CreateItemSlot(self)
-		hooksecurefunc(button, "Update", UpdateBagnonItemSlot)
-		return button
-	end
-end)
-
-tinsert(addons, function()
-	if not Combuctor then return true end
-
-	local CreateItemSlot = Combuctor.ItemSlot.Create
-	function Combuctor.ItemSlot:Create()
+	local CreateItemSlot = addon.ItemSlot.Create
+	function addon.ItemSlot:Create()
 		local button = CreateItemSlot(self)
 		hooksecurefunc(button, "Update", UpdateBagnonItemSlot)
 		return button
@@ -287,7 +277,7 @@ end)
 -- DerpyStuffing
 -- http://www.wowinterface.com/downloads/info22500-DerpyStuffingAuroraOneBags.html
 
-tinsert(addons, function(name)
+tinsert(addons, function()
 	if not Stuffing then return true end
 
 	hooksecurefunc(Stuffing, "SlotUpdate", function(self, b)
@@ -311,12 +301,42 @@ end)
 -- http://wow.curseforge.com/addons/litebag/
 
 tinsert(addons, function(name)
-    if not LiteBagItemButton_Update then return true end
+	if not LiteBagItemButton_Update then return true end
 
-    hooksecurefunc("LiteBagItemButton_Update", function(button)
-        local slot = button:GetID()
-        local bag =  button:GetParent():GetID()
-        local text = not button.Count:IsShown() and GetBindText(bag, slot)
-        SetItemButtonBindType(button, text)
-    end)
+	hooksecurefunc("LiteBagItemButton_Update", function(button)
+		local slot = button:GetID()
+		local bag =  button:GetParent():GetID()
+		local text = not button.Count:IsShown() and GetBindText(bag, slot)
+		SetItemButtonBindType(button, text)
+	end)
+end)
+
+------------------------------------------------------------------------
+-- ElvUI
+-- http://www.tukui.org/dl.php
+
+tinsert(addons, function()
+	if not ElvUI then return true end
+
+	local Bags = LibStub("AceAddon-3.0"):GetAddon("ElvUI"):GetModule("Bags")
+	hooksecurefunc(Bags, "UpdateSlot", function(self, bag, slot)
+		local button = self.Bags[bag][slot]
+		local text = not button.Count:IsShown() and GetBindText(bag, slot)
+		SetItemButtonBindType(button, text)
+	end)
+end)
+
+------------------------------------------------------------------------
+-- TukUI
+-- http://www.tukui.org/dl.php
+
+tinsert(addons, function()
+	if not Tukui then return true end
+
+	hooksecurefunc(Tukui[2].Inventory.Bags, "SlotUpdate", function(self, bag, button)
+		local slot = button:GetID()
+		local _, count = GetContainerItemInfo(bag, slot)
+		local text = (not count or count < 2) and GetBindText(bag, slot)
+		SetItemButtonBindType(button, text)
+	end)
 end)
