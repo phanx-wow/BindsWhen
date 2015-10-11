@@ -188,12 +188,15 @@ end)
 -- http://wow.curseforge.com/addons/combuctor/
 
 local function UpdateBagnonItemSlot(self)
+	local bag = self.bag
+	if type(bag) ~= "number" then return end
+
 	local text
-	if not self.Count:IsShown() and self.bag ~= "vault" then
+	local link = self.hasItem
+	if link and not self.Count:IsShown() then
 		if self:IsCached() then
-			local link = self.hasItem
 			if link then
-				if strmatch(link, "battlepet:") then
+				if strfind(link, "battlepet:") then
 					-- Caged battle pets don't bind and don't stack
 					text = BoE
 				else
@@ -201,7 +204,6 @@ local function UpdateBagnonItemSlot(self)
 				end
 			end
 		else
-			local bag = self.bag
 			local slot = self:GetID()
 			local getInvSlot = bag == BANK_CONTAINER and BankButtonIDToInvSlotID or bag == REAGENTBANK_CONTAINER and ReagentBankButtonIDToInvSlotID
 			if getInvSlot then
