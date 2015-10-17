@@ -299,6 +299,20 @@ tinsert(addons, function()
 end)
 
 ------------------------------------------------------------------------
+-- Inventorian
+-- http://wow.curseforge.com/addons/inventorian/
+
+tinsert(addons, function(name)
+	local Inventorian = LibStub and LibStub("AceAddon-3.0") and LibStub("AceAddon-3.0"):GetAddon("Inventorian", true)
+	if not Inventorian then return end
+
+	hooksecurefunc(Inventorian.Item.prototype, "Update", function(button)
+		local text = not button.Count:IsShown() and GetBindText(button.bag, button.slot)
+		SetItemButtonBindType(button, text)
+	end)
+end)
+
+------------------------------------------------------------------------
 -- LiteBag
 -- http://wow.curseforge.com/addons/litebag/
 
