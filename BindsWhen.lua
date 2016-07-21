@@ -1,8 +1,10 @@
 --[[--------------------------------------------------------------------
 	Binds When?
 	Shows BoA/BoE text on bag items.
-	Copyright (c) 2015 Phanx <addons@phanx.net>. All rights reserved.
+	Copyright (c) 2015, 2016 Phanx <addons@phanx.net>. All rights reserved.
 	https://github.com/Phanx/BindsWhen
+	http://www.curse.com/addons/wow/bindswhen
+	http://www.wowinterface.com/downloads/info23465-BindsWhen.html
 ----------------------------------------------------------------------]]
 -- Text to show for each binding type
 

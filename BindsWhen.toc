@@ -1,11 +1,11 @@
-## Interface: 60200
+## Interface: 70000
 ## Version: @project-version@
 
 ## Title: Binds When?
 ## Notes: Shows BoA/BoE text on bag items.
 ## Author: Phanx
 ## X-Email: addons@phanx.net
-## X-Copyright: Copyright (c) 2015 Phanx. All rights reserved.
+## X-Copyright: Copyright (c) 2015, 2016 Phanx. All rights reserved.
 ## X-Website: https://github.com/Phanx/BindsWhen
 
 BindsWhen.lua
