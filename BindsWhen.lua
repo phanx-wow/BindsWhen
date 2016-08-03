@@ -3,7 +3,7 @@
 	Shows BoA/BoE text on bag items.
 	Copyright (c) 2015, 2016 Phanx <addons@phanx.net>. All rights reserved.
 	https://github.com/Phanx/BindsWhen
-	http://www.curse.com/addons/wow/bindswhen
+	https://mods.curse.com/addons/wow/bindswhen
 	http://www.wowinterface.com/downloads/info23465-BindsWhen.html
 ----------------------------------------------------------------------]]
 -- Text to show for each binding type
@@ -167,7 +167,7 @@ end)
 
 ------------------------------------------------------------------------
 -- AdiBags
--- http://www.wowace.com/addons/adibags/
+-- https://www.wowace.com/addons/adibags/
 
 tinsert(addons, function(name)
 	if not AdiBags then return true end
@@ -186,8 +186,8 @@ end)
 
 ------------------------------------------------------------------------
 -- Bagnon
--- http://wow.curseforge.com/addons/bagnon/
--- http://wow.curseforge.com/addons/combuctor/
+-- https://wow.curseforge.com/addons/bagnon/
+-- https://wow.curseforge.com/addons/combuctor/
 
 local function UpdateBagnonItemSlot(self)
 	local bag = self.bag
@@ -302,7 +302,7 @@ end)
 
 ------------------------------------------------------------------------
 -- Inventorian
--- http://wow.curseforge.com/addons/inventorian/
+-- https://wow.curseforge.com/addons/inventorian/
 
 tinsert(addons, function(name)
 	local Inventorian = LibStub and LibStub("AceAddon-3.0") and LibStub("AceAddon-3.0"):GetAddon("Inventorian", true)
@@ -316,7 +316,7 @@ end)
 
 ------------------------------------------------------------------------
 -- LiteBag
--- http://wow.curseforge.com/addons/litebag/
+-- https://wow.curseforge.com/addons/litebag/
 
 tinsert(addons, function(name)
 	if not LiteBagItemButton_Update then return true end
