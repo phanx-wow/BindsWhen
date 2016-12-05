@@ -185,6 +185,21 @@ tinsert(addons, function(name)
 end)
 
 ------------------------------------------------------------------------
+-- Backpack
+-- https://mods.curse.com/addons/wow/backpack
+-- https://wowinterface.com/downloads/info16997
+
+tinsert(addons, function()
+	if not Backpack then return true end
+
+	Backpack:On("PostUpdateSlot", function(button)
+		local count = button.itemCount
+		local text = (not count or count < 2) and GetBindText(button.bagID, button.slotID)
+		SetItemButtonBindType(button, text)
+	end)
+end)
+
+------------------------------------------------------------------------
 -- Bagnon
 -- https://wow.curseforge.com/addons/bagnon/
 -- https://wow.curseforge.com/addons/combuctor/

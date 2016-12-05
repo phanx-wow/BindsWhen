@@ -7,5 +7,7 @@
 ## X-Email: addons@phanx.net
 ## X-Copyright: Copyright (c) 2015, 2016 Phanx. All rights reserved.
 ## X-Website: https://github.com/Phanx/BindsWhen
+## X-Curse-Project-ID: 88868
+## X-WoWI-ID: 23465
 
 BindsWhen.lua

@@ -1,3 +1,7 @@
+### Version 7.1.0.1
+
+* Added support for Backpack
+
 ### Version 7.1.0.0
 
 * Updated for WoW 7.1
