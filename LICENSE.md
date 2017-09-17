@@ -1,4 +1,4 @@
-Copyring (c) 2015, 2016 Phanx. All rights reserved.
+Copyring (c) 2015-2017 Phanx. All rights reserved.
 
 Permission is granted for anyone to use, read, or otherwise interpret this
 software for any purpose, without any restrictions.

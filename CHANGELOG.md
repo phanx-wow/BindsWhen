@@ -1,3 +1,8 @@
+### Version 7.3.0.0
+
+* Updated for WoW 7.3
+* Fixed support for AdiBags
+
 ### Version 7.1.0.1
 
 * Added support for Backpack
