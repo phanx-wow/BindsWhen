@@ -1,10 +1,11 @@
 --[[--------------------------------------------------------------------
 	Binds When?
 	Shows BoA/BoE text on bag items.
-	Copyright (c) 2015, 2016 Phanx <addons@phanx.net>. All rights reserved.
-	https://github.com/Phanx/BindsWhen
+	Copyright (c) 2015-2017 Phanx <addons@phanx.net>. All rights reserved.
+	Maintained by Akkorian <armordecai@protonmail.com>
+	https://github.com/phanx-wow/BindsWhen
 	https://mods.curse.com/addons/wow/bindswhen
-	http://www.wowinterface.com/downloads/info23465-BindsWhen.html
+	https://www.wowinterface.com/downloads/info23465-BindsWhen.html
 ----------------------------------------------------------------------]]
 -- Text to show for each binding type
 
@@ -170,10 +171,11 @@ end)
 -- https://www.wowace.com/addons/adibags/
 
 tinsert(addons, function(name)
+	local AdiBags = LibStub and LibStub("AceAddon-3.0", true) and LibStub("AceAddon-3.0"):GetAddon("AdiBags", true)
 	if not AdiBags then return true end
 
 	local ItemButton = AdiBags:GetClass("ItemButton")
-	hooksecurefunc(ItemButton, "Update", function(self)
+	hooksecurefunc(ItemButton.prototype, "Update", function(self)
 		local text
 		if self.inventorySlot then
 			text = not self.Count:IsShown() and GetBindText("player", self.inventorySlot)
@@ -247,7 +249,7 @@ end)
 
 ------------------------------------------------------------------------
 -- cargBags
--- http://www.wowinterface.com/downloads/info22329-cargBagsNivayaRealUIstandalone.html
+-- https://www.wowinterface.com/downloads/info22329-cargBagsNivayaRealUIstandalone.html
 
 tinsert(addons, function(name)
 	local cargBags = _G[name and GetAddOnMetadata(name, "X-cargBags") or "cargBags"]
@@ -294,7 +296,7 @@ end)
 
 ------------------------------------------------------------------------
 -- DerpyStuffing
--- http://www.wowinterface.com/downloads/info22500-DerpyStuffingAuroraOneBags.html
+-- https://www.wowinterface.com/downloads/info22500-DerpyStuffingAuroraOneBags.html
 
 tinsert(addons, function()
 	if not Stuffing then return true end
