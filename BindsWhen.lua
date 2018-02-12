@@ -4,7 +4,7 @@
 	Copyright (c) 2015-2017 Phanx <addons@phanx.net>. All rights reserved.
 	Maintained by Akkorian <armordecai@protonmail.com>
 	https://github.com/phanx-wow/BindsWhen
-	https://mods.curse.com/addons/wow/bindswhen
+	https://www.curseforge.com/wow/addons/bindswhen
 	https://www.wowinterface.com/downloads/info23465-BindsWhen.html
 ----------------------------------------------------------------------]]
 -- Text to show for each binding type
@@ -188,7 +188,7 @@ end)
 
 ------------------------------------------------------------------------
 -- Backpack
--- https://mods.curse.com/addons/wow/backpack
+-- https://www.curseforge.com/wow/addons/backpack
 -- https://wowinterface.com/downloads/info16997
 
 tinsert(addons, function()
