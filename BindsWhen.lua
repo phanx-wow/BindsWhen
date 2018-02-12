@@ -214,7 +214,7 @@ local function UpdateBagnonItemSlot(self)
 	local link = self.hasItem
 	if link and not self.Count:IsShown() then
 		if self:IsCached() then
-			if link then
+			if type(link) == "string" then
 				if strfind(link, "battlepet:") then
 					-- Caged battle pets don't bind and don't stack
 					text = BoE
