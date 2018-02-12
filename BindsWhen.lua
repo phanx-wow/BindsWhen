@@ -322,7 +322,7 @@ end)
 -- https://wow.curseforge.com/addons/inventorian/
 
 tinsert(addons, function(name)
-	local Inventorian = LibStub and LibStub("AceAddon-3.0") and LibStub("AceAddon-3.0"):GetAddon("Inventorian", true)
+	local Inventorian = LibStub and LibStub("AceAddon-3.0", true) and LibStub("AceAddon-3.0"):GetAddon("Inventorian", true)
 	if not Inventorian then return end
 
 	hooksecurefunc(Inventorian.Item.prototype, "Update", function(button)
