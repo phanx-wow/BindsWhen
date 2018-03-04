@@ -1,3 +1,8 @@
+### Version 7.3.5.0
+
+* Fixed an error with the Bagnon bank frame
+* Fixed an error when no addons using AceAddon-3.0 are loaded
+
 ### Version 7.3.0.0
 
 * Updated for WoW 7.3
