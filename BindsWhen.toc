@@ -3,9 +3,9 @@
 
 ## Title: Binds When?
 ## Notes: Shows BoA/BoE text on bag items.
-## Author: Phanx, Akkorian
-## X-Email: armordecai@protonmail.com
-## X-Copyright: Copyright (c) 2015-2017 Phanx. All rights reserved.
+## Author: Phanx
+## X-Email: addons@phanx.net
+## X-License: All rights reserved
 ## X-Website: https://github.com/Phanx/BindsWhen
 ## X-Curse-Project-ID: 88868
 ## X-WoWI-ID: 23465
